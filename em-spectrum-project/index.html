@@ -1,12 +1,191 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>EMS Project</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EM Spectrum Factfile Builder</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      color: #0d2f69;
+      line-height: 1.6;
+      margin: 20px;
+      background-color: #ffffff;
+    }
+    h2, h3 { color: #0d2f69; margin-top: 0; }
+    .instruction { color: #40b4a6; font-weight: bold; font-style: italic; margin-bottom: 15px; }
+    .keyword { color: #ff7828; font-weight: bold; }
+    
+    select, textarea {
+      width: 100%; 
+      padding: 10px; 
+      border: 2px solid #0d2f69; 
+      border-radius: 6px; 
+      box-sizing: border-box; 
+      font-size: 14px; 
+      margin-bottom: 15px; 
+      color: #0d2f69;
+    }
+    textarea { min-height: 80px; resize: vertical; }
+    
+    .accordion-item { border: 1px solid #40b4a6; border-radius: 6px; margin-bottom: 10px; overflow: hidden; }
+    .accordion-header { background: #40b4a6; color: white; padding: 10px 15px; cursor: pointer; font-weight: bold; display: flex; justify-content: space-between; }
+    .accordion-content { padding: 15px; display: none; background: #fafafa; }
+    
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 30px; }
+    .preview-box { border: 3px dashed #0d2f69; padding: 20px; border-radius: 8px; background: #fff; min-height: 250px; }
+    .preview-box h3 { text-align: center; border-bottom: 2px solid #0d2f69; padding-bottom: 10px; }
+    
+    button { background-color: #0d2f69; color: white; border: none; padding: 10px 20px; font-size: 14px; font-weight: bold; border-radius: 6px; cursor: pointer; margin-right: 10px; margin-bottom: 10px; }
+    button.secondary { background-color: #40b4a6; }
+    
+    @media print {
+      body * { visibility: hidden; }
+      .preview-box, .preview-box * { visibility: visible; }
+      .preview-box { position: absolute; left: 0; top: 0; width: 100%; border: none; }
+    }
+  </style>
 </head>
 <body>
 
-<h1>EMS Project</h1>
-<p>This is my first physics project.</p>
+  <div class="grid">
+    <div>
+      <h2>EM Spectrum Factfile Builder</h2>
+      
+      <p class="instruction">First, select your chosen wave from the dropdown menu below.</p>
+      <label for="waveSelect"><strong>Chosen <span class="keyword">Electromagnetic Wave</span>:</strong></label>
+      <select id="waveSelect" onchange="updateView()">
+        <option value="">-- Select a Wave --</option>
+        <option value="Radio Waves">Radio Waves</option>
+        <option value="Microwaves">Microwaves</option>
+        <option value="Infrared">Infrared</option>
+        <option value="Visible Light">Visible Light</option>
+        <option value="Ultraviolet">Ultraviolet</option>
+        <option value="X-rays">X-rays</option>
+        <option value="Gamma Rays">Gamma Rays</option>
+      </select>
 
+      <p class="instruction">Tap each section below to reveal guiding questions, then input your 5 facts.</p>
+      
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAcc('freq-guide')">1. Frequency Range <span>▼</span></div>
+        <div id="freq-guide" class="accordion-content">
+          <p><em>Guiding Question: What is the frequency range of this wave? Is it measured in Hz, MHz, or GHz?</em></p>
+          <textarea id="t1" placeholder="Enter 1 fact about the frequency range..." oninput="updateView()"></textarea>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAcc('wave-guide')">2. Wavelength Range <span>▼</span></div>
+        <div id="wave-guide" class="accordion-content">
+          <p><em>Guiding Question: How long or short is this wavelength? Can it be compared to a scale (e.g., buildings, atoms)?</em></p>
+          <textarea id="t2" placeholder="Enter 1 fact about the wavelength range..." oninput="updateView()"></textarea>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAcc('uses-guide')">3. Uses (2 Facts Required) <span>▼</span></div>
+        <div id="uses-guide" class="accordion-content">
+          <p><em>Guiding Question: How do humans or technologies utilize this wave in daily life, science, or medicine?</em></p>
+          <textarea id="t3" placeholder="Enter use fact #1..." oninput="updateView()"></textarea>
+          <textarea id="t4" placeholder="Enter use fact #2..." oninput="updateView()"></textarea>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAcc('danger-guide')">4. Dangers <span>▼</span></div>
+        <div id="danger-guide" class="accordion-content">
+          <p><em>Guiding Question: What risks does this wave pose to human health or the environment? How do we protect ourselves?</em></p>
+          <textarea id="t5" placeholder="Enter 1 fact about the dangers..." oninput="updateView()"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <h2><span class="keyword">Live Preview</span></h2>
+      <p class="instruction">Review your poster layout below. You must complete all sections before copying or printing.</p>
+      
+      <div id="preview" class="preview-box">
+        <h3 id="pTitle">Your Chosen Wave</h3>
+        <p><strong>Frequency Range:</strong> <span id="p1" style="color:#666;">Awaiting input...</span></p>
+        <p><strong>Wavelength Range:</strong> <span id="p2" style="color:#666;">Awaiting input...</span></p>
+        <p><strong>Primary Uses:</strong></p>
+        <ul>
+          <li id="p3" style="color:#666;">Awaiting input...</li>
+          <li id="p4" style="color:#666;">Awaiting input...</li>
+        </ul>
+        <p><strong>Dangers & Risks:</strong> <span id="p5" style="color:#666;">Awaiting input...</span></p>
+      </div>
+
+      <div style="margin-top: 20px;">
+        <button onclick="checkSub()">Check Submission</button>
+        <button id="cBtn" class="secondary" onclick="copyT()" disabled style="opacity:0.5; cursor:not-allowed;">Copy Text</button>
+        <button id="pBtn" class="secondary" onclick="printP()" disabled style="opacity:0.5; cursor:not-allowed;">Print Poster</button>
+      </div>
+      <div id="status" style="font-weight: bold; margin-top: 10px;"></div>
+    </div>
+  </div>
+
+  <script>
+    function toggleAcc(id) {
+      var el = document.getElementById(id);
+      el.style.display = (el.style.display === 'block') ? 'none' : 'block';
+    }
+
+    function updateView() {
+      var w = document.getElementById('waveSelect').value;
+      var f1 = document.getElementById('t1').value;
+      var f2 = document.getElementById('t2').value;
+      var f3 = document.getElementById('t3').value;
+      var f4 = document.getElementById('t4').value;
+      var f5 = document.getElementById('t5').value;
+
+      document.getElementById('pTitle').innerText = w ? w + ' Factfile' : 'Your Chosen Wave';
+      document.getElementById('p1').innerText = f1 || 'Awaiting input...';
+      document.getElementById('p2').innerText = f2 || 'Awaiting input...';
+      document.getElementById('p3').innerText = f3 || 'Awaiting input...';
+      document.getElementById('p4').innerText = f4 || 'Awaiting input...';
+      document.getElementById('p5').innerText = f5 || 'Awaiting input...';
+    }
+
+    function checkSub() {
+      var w = document.getElementById('waveSelect').value;
+      var f1 = document.getElementById('t1').value.trim();
+      var f2 = document.getElementById('t2').value.trim();
+      var f3 = document.getElementById('t3').value.trim();
+      var f4 = document.getElementById('t4').value.trim();
+      var f5 = document.getElementById('t5').value.trim();
+      var s = document.getElementById('status');
+
+      if(!w || !f1 || !f2 || !f3 || !f4 || !f5) {
+        s.innerText = '❌ Please select a wave and complete all 5 facts before unlocking actions.';
+        s.style.color = '#ff7828';
+        toggleBtns(true);
+      } else {
+        s.innerText = '✅ Verification successful! Your tool features are unlocked.';
+        s.style.color = '#40b4a6';
+        toggleBtns(false);
+      }
+    }
+
+    function toggleBtns(disable) {
+      var b1 = document.getElementById('cBtn'); 
+      var b2 = document.getElementById('pBtn');
+      b1.disabled = disable; b2.disabled = disable;
+      b1.style.opacity = disable ? '0.5' : '1'; 
+      b2.style.opacity = disable ? '0.5' : '1';
+      b1.style.cursor = disable ? 'not-allowed' : 'pointer'; 
+      b2.style.cursor = disable ? 'not-allowed' : 'pointer';
+    }
+
+    function copyT() {
+      var text = document.getElementById('preview').innerText;
+      navigator.clipboard.writeText(text).then(function() {
+        alert('Factfile text copied to clipboard!');
+      });
+    }
+
+    function printP() { window.print(); }
+  </script>
 </body>
 </html>
