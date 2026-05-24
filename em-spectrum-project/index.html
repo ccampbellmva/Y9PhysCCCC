@@ -50,9 +50,9 @@
 
   <div class="grid">
     <div>
-      <h2>EM Spectrum Factfile Builder</h2>
+      <h2>EM Spectrum Fact file Builder</h2>
       
-      <p class="instruction">First, select your chosen wave from the dropdown menu below.</p>
+      <p class="instruction">First, select your chosen wave from the drop-down menu below.</p>
       <label for="waveSelect"><strong>Chosen <span class="keyword">Electromagnetic Wave</span>:</strong></label>
       <select id="waveSelect" onchange="updateView()">
         <option value="">-- Select a Wave --</option>
@@ -84,11 +84,11 @@
       </div>
 
       <div class="accordion-item">
-        <div class="accordion-header" onclick="toggleAcc('uses-guide')">3. Uses (2 Facts Required) <span>▼</span></div>
+        <div class="accordion-header" onclick="toggleAcc('uses-guide')">3. Uses (Explanation Required) <span>▼</span></div>
         <div id="uses-guide" class="accordion-content">
-          <p><em>Guiding Question: How do humans or technologies utilize this wave in daily life, science, or medicine?</em></p>
-          <textarea id="t3" placeholder="Enter use fact #1..." oninput="updateView()"></textarea>
-          <textarea id="t4" placeholder="Enter use fact #2..." oninput="updateView()"></textarea>
+          <p><em>Guiding Question: How do humans or technologies utilise this wave in daily life, science, or medicine? Why can this wave be used in particular?</em></p>
+          <textarea id="t3" placeholder="Enter use fact #1 with short explanation..." oninput="updateView()"></textarea>
+          <textarea id="t4" placeholder="Enter use fact #2 with short explanation..." oninput="updateView()"></textarea>
         </div>
       </div>
 
